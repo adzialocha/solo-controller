@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" type="text/css" href="styles/reset.css">
+    <link rel="stylesheet" type="text/css" href="styles/ui.css">
+    <link rel="stylesheet" type="text/css" href="styles/app.css">
+    <title>CHANNEL TOGGLE INTERFACE</title>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="bower_components/osc-js/dist/osc.js"></script>
+    <script type="text/javascript" src="bower_components/react/react.js"></script>
+    <script type="text/javascript" src="scripts/ui.js"></script>
+    <script type="text/javascript" src="scripts/ui.toggle.jsx.js"></script>
+    <script type="text/javascript" src="scripts/ui.button.jsx.js"></script>
+    <script type="text/javascript" src="scripts/ui.matrix.jsx.js"></script>
+    <script type="text/javascript" src="scripts/ui.slider.jsx.js"></script>
+    <script type="text/javascript" src="scripts/ui.selector.jsx.js"></script>
+    <script type="text/javascript" src="scripts/interface.js"></script>
+    <script type="text/javascript" src="scripts/controller.js"></script>
+    <script type="text/javascript" src="scripts/app.js"></script>
+  </head>
+  <body onload="app.init()">
+    <div class="screen">
+      <div class="screen__header">
+        <div class="bar">
+          <div class="button-group push-left">
+            <div class="button-group-item" id="main-active-state"></div>
+            <div class="button-group-item" id="main-scene-id"></div>
+            <div class="button-group-item">
+              <div class="slider-container" id="main-bpm"></div>
+            </div>
+          </div>
+          <div class="button-group push-right">
+            <div class="button-group-item" id="button-goto-main"></div>
+            <div class="button-group-item" id="button-goto-frequency"></div>
+            <div class="button-group-item" id="button-goto-treshold"></div>
+            <div class="button-group-item" id="button-goto-setup"></div>
+          </div>
+        </div>
+      </div>
+      <div class="screen__content">
+        <div class="screen__content__view" id="view-main"></div>
+        <div class="screen__content__view" id="view-frequency"></div>
+        <div class="screen__content__view" id="view-treshold"></div>
+        <div class="screen__content__view" id="view-setup">
+          <div class="screen-panel">
+            <h1>SERVER</h1>
+            <h2>PATH</h2>
+            <input id="setup-server-path" value="localhost">
+            <h2>PORT</h2>
+            <input id="setup-server-port" value="8000">
+            <hr>
+            <h1>SET</h1>
+            <h2>ID</h2>
+            <input id="setup-set" value="DEFAULT"></input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

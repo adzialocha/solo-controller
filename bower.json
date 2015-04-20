@@ -1,0 +1,15 @@
+{
+  "name": "solo-controller",
+  "version": "0.0.1",
+  "homepage": "https://github.com/marmorkuchen-net/channel-toggle-interface",
+  "dependencies": {
+    "osc-js": "~0.1.1",
+    "react": "~0.13.1",
+    "jquery": "~2.1.3"
+  },
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "app/bower_components"
+  ]
+}

@@ -1,0 +1,46 @@
+*
+{
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+html, body
+{
+  height: 100%;
+}
+
+body
+{
+  background-color: #111;
+  font-family: "Arial", sans-serif;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+/* layout */
+
+.screen
+{
+  height: 100%;
+}
+
+.screen__header
+{
+  height: 10%;
+}
+
+.screen__content
+{
+  height: 90%;
+}
+
+.screen__content__view
+{
+  height: 100%;
+  display: none;
+}
