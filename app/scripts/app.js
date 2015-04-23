@@ -281,20 +281,24 @@
 
     $(document).keypress(function($event) {
 
-      var preset;
+      var preset, sceneId;
 
-      if ($event.keyCode >= 49 && $event.keyCode <= 57) {
-        preset =_presets.getPreset($event.keyCode - 48);
+      if ($event.which >= 49 && $event.which <= 57) {
+        sceneId = $event.which - 48;
+        preset =_presets.getPreset(sceneId);
         if (preset) {
-          console.log('LOAD PRESET', $event.keyCode - 48);
+          console.log('LOAD PRESET', sceneId);
           _controller.loadScene(preset);
+          if (_interface.isConnected()) {
+            _interface.sendScene(sceneId);
+          }
         } else {
-          console.log('PRESET DOES NOT EXIST', $event.keyCode - 48);
+          console.log('PRESET DOES NOT EXIST', $event.which - 48);
         }
-      } else if ($event.keyCode === 48) {
+      } else if ($event.which === 48) {
         console.log('RESET');
         _controller.resetScene();
-      } else if ($event.keyCode === 112) { // "P"
+      } else if ($event.which === 112) { // "P"
         console.log('PRINT CURRENT SETTING');
         console.log('"X":' + JSON.stringify(_controller.getScene()));
       }

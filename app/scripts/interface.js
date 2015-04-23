@@ -1,6 +1,7 @@
 (function(window, OSC, undefined) {
 
   var OSC_PATH = '/param/';
+  var OSC_SCENE_PATH = '/scene/'
 
   var DEFAULT_SERVER_PATH = 'localhost';
   var DEFAULT_SERVER_PORT = 8000;
@@ -39,6 +40,20 @@
 
     payload = eStatus? 1.0 : 0.0;
     msg = new OSC.Message(OSC_PATH, eIndex, payload);
+
+    _osc.send(msg);
+
+  }
+
+  function _sendScene(eSceneIndex) {
+
+    var msg;
+
+    if (_status === undefined || _status === null) {
+      return false;
+    }
+
+    msg = new OSC.Message(OSC_SCENE_PATH, eSceneIndex);
 
     _osc.send(msg);
 
@@ -92,7 +107,11 @@
   };
 
   Interface.prototype.sendMessage = function(eIndex, eStatus) {
-    _send(eIndex, eStatus)
+    _send(eIndex, eStatus);
+  };
+
+  Interface.prototype.sendScene = function(eSceneIndex) {
+    _sendScene(eSceneIndex);
   };
 
   Interface.prototype.stop = function() {

@@ -13,13 +13,13 @@ from autobahn.twisted.resource import HTTPChannelHixie76Aware
 
 # constants
 
-SERVER_IP = '127.0.0.1'
 SERVER_UDP_PORT = 7400
+
 SERVER_WS_PORT = 8000
 SERVER_HTTP_PORT = 9000
 SERVER_HTTP_RESOURCES = 'app'
 
-CLIENT_IP = '127.0.0.1'
+CLIENT_IP = '192.168.178.52'
 CLIENT_UDP_PORT = 7500
 
 
@@ -29,21 +29,25 @@ class Bridge():
 
     def __init__(self):
         self.udpServer = None
-        self.wsServer = None
+        self.wsServer = []
 
     def setUdpServer(self, udpServer):
         self.udpServer = udpServer
 
     def setWebsocketServer(self, wsServer):
-        self.wsServer = wsServer
+        self.wsServer.append(wsServer)
 
     def udpToWebsocket(self, data):
-        if self.wsServer is not None:
-            self.wsServer.sendMessage(data, True)
+
+        for wsClient in self.wsServer:
+            wsClient.sendMessage(data, True)
 
     def websocketToUdp(self, data):
         if self.udpServer is not None:
             self.udpServer.transport.write(data, (CLIENT_IP, CLIENT_UDP_PORT))
+
+        for wsClient in self.wsServer:
+            wsClient.sendMessage(data, True)
 
 
 # udp server
@@ -99,7 +103,7 @@ if __name__ == '__main__':
 
     # websocket setup
 
-    wsAddress = 'ws://%s:%d' % (SERVER_IP, SERVER_WS_PORT)
+    wsAddress = 'ws://%s:%d' % ('127.0.0.1', SERVER_WS_PORT)
 
     factory = BridgedWebSocketServerFactory(wsAddress, False, False, bridge)
     factory.protocol = WebSocketServer
