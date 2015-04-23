@@ -56,7 +56,7 @@
           key: eIndex,
           label: eItem.label,
           color: _this.props.color,
-          status: false,
+          status: (_this.state.selectedElements.indexOf(eItem.value) > -1),
           id: eItem.value,
           onStatusChange: _this._onStatusChange
         }));

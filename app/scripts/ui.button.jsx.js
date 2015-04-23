@@ -32,8 +32,10 @@
 
       return React.DOM.button({
         className: 'button' + activeStyle + ' ' + this.props.color,
-        onTouchStart: this.onTouchStart,
-        onTouchEnd: this.onTouchEnd
+        // onTouchStart: this.onTouchStart,
+        // onTouchEnd: this.onTouchEnd,
+        onMouseDown: this.onTouchStart,
+        onMouseUp: this.onTouchEnd
       }, this.props.label);
 
     }

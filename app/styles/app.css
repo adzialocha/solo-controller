@@ -37,10 +37,18 @@ body
 .screen__content
 {
   height: 90%;
+  position: relative;
 }
 
 .screen__content__view
 {
+  position: absolute;
   height: 100%;
-  display: none;
+  width: 100%;
+  top: 100%;
+}
+
+.screen__content__view--visible
+{
+  top: 0;
 }

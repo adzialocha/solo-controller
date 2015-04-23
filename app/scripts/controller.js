@@ -1,14 +1,13 @@
 (function(window, undefined) {
 
   var SMALLEST_SUBDIVISION = 128;
+  var DEFAULT_BPM = 120;
 
   // session
 
-  var _currentScene, _currentSet;
-
   var _active, _cells, _bpm, _timeout, _count;
 
-  var _callback;
+  var _callback, _sceneCallback;
 
   function Cell() {
     this.active = false;
@@ -21,6 +20,19 @@
   };
 
   // private
+
+  function _init(eCellCount) {
+
+    var i;
+
+    _bpm = DEFAULT_BPM;
+    _cells = [];
+
+    for (i = 0; i < eCellCount; i++) {
+      _cells.push(new Cell());
+    }
+
+  }
 
   function _note(eDuration) {
 
@@ -93,29 +105,11 @@
     window.clearTimeout(_timeout);
   }
 
-  // storage
-
-  function _save() {
-    if (_currentScene && _currentScene != 0 && _currentSet) {
-      window.storage.saveSession(_currentSet, _currentScene, _cells);
-    }
-  }
-
   // public
 
   function Controller(eCellCount) {
-
-    var i;
-
-    _bpm = 120;
     _active = false;
-
-    _cells = [];
-
-    for (i = 0; i < eCellCount; i++) {
-      _cells.push(new Cell());
-    }
-
+    _init(eCellCount);
   }
 
   Controller.prototype.setActiveState = function(eStatus) {
@@ -132,52 +126,67 @@
   };
 
   Controller.prototype.setBPM = function(eValue) {
-
     _bpm = eValue;
-
     if (_active) {
       _stop();
       _start();
     }
-
   };
 
   Controller.prototype.setTreshold = function(eIndex, eValue) {
     _cells[eIndex].treshold = eValue;
-    _save();
   };
 
   Controller.prototype.setFrequency = function(eIndex, eValue) {
     _cells[eIndex].frequency = eValue;
-    _save();
   };
 
   Controller.prototype.setCellState = function(eIndex, eStatus) {
     _cells[eIndex].active = eStatus;
-    _save();
   };
 
   Controller.prototype.registerCallback = function(eFunction) {
     _callback = eFunction;
   };
 
+  Controller.prototype.registerSceneCallback = function(eFunction) {
+    _sceneCallback = eFunction;
+  };
+
   Controller.prototype.loadScene = function(eSceneData) {
 
-    _currentSet = eSceneData.set;
-    _currentScene = eSceneData.scene;
+    eSceneData.cells.forEach(function(eItem, eIndex) {
+      _cells[eIndex] = new Cell();
+      _cells[eIndex].active = eItem.active;
+      _cells[eIndex].frequency = eItem.frequency;
+      _cells[eIndex].treshold = eItem.treshold;
+    });
 
-    _cells = eSceneData.cells;
+    _bpm = eSceneData.bpm;
 
     if (_active) {
       _stop();
       _start();
     }
 
+    if (_sceneCallback) {
+      _sceneCallback(_cells, _bpm);
+    }
+
   };
 
-  Controller.prototype.initScene = function(eSetName, eSceneId) {
-    _currentScene = eSceneId;
-    _currentSet = eSetName;
+  Controller.prototype.getScene = function() {
+    return {
+      cells: _cells,
+      bpm: _bpm
+    };
+  };
+
+  Controller.prototype.resetScene = function() {
+    _init(_cells.length);
+    if (_sceneCallback) {
+      _sceneCallback(_cells, _bpm);
+    }
   };
 
   window.Controller = window.Controller || Controller;

@@ -29,37 +29,19 @@
     },
 
     componentDidMount: function() {
-
-      var position, percentage;
-      var width, value;
-
-      percentage = (this.props.value - this.props.min) / this.props.max;
-      position = this.getDOMNode().offsetWidth * percentage;
-
       this.setState({
-        position: position,
         value: this.props.value,
         offset: this.getDOMNode().offsetLeft,
         width: this.getDOMNode().offsetWidth
       });
-
     },
 
     componentWillReceiveProps: function(nProps) {
-
-      var position, percentage;
-      var width, value;
-
-      percentage = (this.props.value - this.props.min) / this.props.max;
-      position = this.getDOMNode().offsetWidth * percentage;
-
       this.setState({
-        position: position,
         value: this.props.value,
         offset: this.getDOMNode().offsetLeft,
         width: this.getDOMNode().offsetWidth
       });
-
     },
 
     onValueChange: function($event) {
@@ -68,20 +50,19 @@
       var width, value;
 
       if ($event.touches) {
-        position = $event.touches[0].clientX - this.getDOMNode().offsetLeft;
+        position = $event.touches[0].clientX - this.state.offset;
       } else {
-        position = $event.pageX- this.getDOMNode().offsetLeft;
+        position = $event.pageX - this.state.offset;
       }
 
-      width = this.getDOMNode().offsetWidth;
+      width = this.state.width;
 
       if (position >= 0 && position <= width) {
 
-        percentage =  position / width;
+        percentage = position / width;
         value = Math.floor(this.props.min + (percentage * (this.props.max - this.props.min)))
 
         this.setState({
-          position: position,
           value: value
         });
 
@@ -96,13 +77,14 @@
       var sliderInnerStyle;
 
       sliderInnerStyle = {
-        width: this.state.position + 'px'
+        width: (((this.state.value - this.props.min) / (this.props.max - this.props.min)) * this.state.width) + 'px'
       };
 
       return React.DOM.div({
           className: 'slider',
           onTouchStart: this.onValueChange,
-          onTouchMove: this.onValueChange
+          onTouchMove: this.onValueChange,
+          onMouseDown: this.onValueChange
         },
         React.DOM.div({ className: 'slider__label' }, this.props.label),
         React.DOM.div({ className: 'slider__value' }, this.state.value),

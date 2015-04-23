@@ -32,7 +32,7 @@
       this.setState({ active: true });
     },
 
-    onTouchEnd: function($event) {
+    onTouchEnd: function() {
 
       var newStatus = ! this.state.status;
 
@@ -51,8 +51,10 @@
 
       return React.DOM.button({
         className: 'button toggle' + activeStyle + statusStyle + ' ' + this.state.color,
-        onTouchStart: this.onTouchStart,
-        onTouchEnd: this.onTouchEnd
+        // onTouchStart: this.onTouchStart,
+        // onTouchEnd: this.onTouchEnd,
+        onMouseDown: this.onTouchStart,
+        onMouseUp: this.onTouchEnd
       }, this.state.label);
 
     }

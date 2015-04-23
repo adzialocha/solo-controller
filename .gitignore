@@ -1,4 +1,2 @@
-node_modules
-.tmp
 app/bower_components
-test
+app/presets.json

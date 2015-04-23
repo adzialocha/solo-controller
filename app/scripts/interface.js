@@ -33,7 +33,7 @@
 
     var payload, msg;
 
-    if (! _status) {
+    if (_status === undefined || _status === null) {
       return false;
     }
 
@@ -78,7 +78,7 @@
 
   }
 
-  Interface.prototype.registerCallback = function (eCallback) {
+  Interface.prototype.registerCallback = function(eCallback) {
     _callback = eCallback;
   };
 
@@ -91,7 +91,7 @@
 
   };
 
-  Interface.prototype.sendMessage = function (eIndex, eStatus) {
+  Interface.prototype.sendMessage = function(eIndex, eStatus) {
     _send(eIndex, eStatus)
   };
 

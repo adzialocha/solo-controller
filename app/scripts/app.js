@@ -1,4 +1,4 @@
-(function(window, React, UI, Controller, Interface, undefined) {
+(function(window, React, UI, Controller, Interface, Presets, undefined) {
 
   // configuration
 
@@ -22,19 +22,19 @@
 
   // modules
 
-  var _controller, _interface;
+  var _controller, _interface, _presets;
 
   // private
 
   var _navigationElems = [];
   var _currentView = 0;
 
-  var _mainViewMatrixElem, _frequencyMatrixElem, _tresholdMatrixElem;
+  var _mainViewMatrixElem, _frequencyMatrixElem, _tresholdMatrixElem, _bpmElement;
 
   function _updateNavigationView(eIndex) {
 
-    document.getElementById(VIEW_IDS[_currentView]).style.display = 'none';
-    document.getElementById(VIEW_IDS[eIndex]).style.display = 'block';
+    $('#' + VIEW_IDS[_currentView]).removeClass('screen__content__view--visible');
+    $('#' + VIEW_IDS[eIndex]).addClass('screen__content__view--visible');
 
     _navigationElems[_currentView].setState({ status: false });
     _navigationElems[eIndex].setState({ status: true });
@@ -53,7 +53,7 @@
       document.getElementById('main-active-state')
     );
 
-    React.render(
+    _bpmElement = React.render(
       React.createElement(UI.Component.Slider, {
         color: UI.COLOR.YELLOW,
         min: 40,
@@ -225,7 +225,7 @@
 
     // view
 
-    React.initializeTouchEvents(true);
+    // React.initializeTouchEvents(true);
 
     _renderView();
     _updateNavigationView(0);
@@ -239,9 +239,27 @@
 
       _mainViewMatrixElem.setCell(eIndex, { status: eStatus });
 
-      if (_interface.isConnected) {
+      if (_interface.isConnected()) {
         _interface.sendMessage(eIndex, eStatus);
       }
+
+    });
+
+    _controller.registerSceneCallback(function(eData, eBpm) {
+
+      _bpmElement.setState({ value: eBpm });
+
+      eData.forEach(function(eCell, eIndex) {
+
+        _mainViewMatrixElem.setCell(eIndex, { status: eCell.active });
+        _tresholdMatrixElem.setCell(eIndex, { value: eCell.treshold });
+        _frequencyMatrixElem.setCell(eIndex, { selectedElements: eCell.frequency });
+
+        if (_interface.isConnected()) {
+          _interface.sendMessage(eIndex, eCell.active);
+        }
+
+      });
 
     });
 
@@ -253,10 +271,38 @@
         window.alert('OSC CONNECTION ERROR\n' + 'an osc-error occurred');
       }
 
+      console.log('OSC', eMessage);
+
+    });
+
+    _presets = new Presets();
+
+    // keyboard events
+
+    $(document).keypress(function($event) {
+
+      var preset;
+
+      if ($event.keyCode >= 49 && $event.keyCode <= 57) {
+        preset =_presets.getPreset($event.keyCode - 48);
+        if (preset) {
+          console.log('LOAD PRESET', $event.keyCode - 48);
+          _controller.loadScene(preset);
+        } else {
+          console.log('PRESET DOES NOT EXIST', $event.keyCode - 48);
+        }
+      } else if ($event.keyCode === 48) {
+        console.log('RESET');
+        _controller.resetScene();
+      } else if ($event.keyCode === 112) { // "P"
+        console.log('PRINT CURRENT SETTING');
+        console.log('"X":' + JSON.stringify(_controller.getScene()));
+      }
+
     });
 
   };
 
   window.app = window.app || app;
 
-})(window, window.React, window.UI, window.Controller, window.Interface);
+})(window, window.React, window.UI, window.Controller, window.Interface, window.Presets);
