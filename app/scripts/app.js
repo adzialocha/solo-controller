@@ -56,7 +56,7 @@
     _bpmElement = React.render(
       React.createElement(UI.Component.Slider, {
         color: UI.COLOR.YELLOW,
-        min: 40,
+        min: 1,
         max: 200,
         value: INITIAL_BPM,
         onStatusChange: _onBPMSliderChange
