@@ -1,6 +1,9 @@
 (function(window, undefined) {
 
+  var DEBUG = false;
+
   var SMALLEST_SUBDIVISION = 128;
+  var BPM_MEASURE = 4; // quarters
   var DEFAULT_BPM = 120;
 
   // session
@@ -44,15 +47,19 @@
 
       if (eItem.frequency.indexOf(eDuration) > -1) {
 
-        // is there a chance we change the state?
+        if (! DEBUG) {
 
-        if (Math.random() < eItem.treshold / 100) {
-          newState = true;
-        } else {
-          newState = false;
+          // is there a chance we change the state?
+
+          if (Math.random() < eItem.treshold / 100) {
+            newState = true;
+          } else {
+            newState = false;
+          }
+
         }
 
-        if (newState != eItem.active) {
+        if (DEBUG || newState != eItem.active) {
 
           eItem.toggle();
 
@@ -71,7 +78,7 @@
   function _start() {
 
     if (_active) {
-      _timeout = window.setTimeout(_tick, (60000 / _bpm) / SMALLEST_SUBDIVISION);
+      _timeout = window.setTimeout(_tick, (60000 / _bpm) / (SMALLEST_SUBDIVISION / BPM_MEASURE));
     }
 
   }
@@ -126,11 +133,14 @@
   };
 
   Controller.prototype.setBPM = function(eValue) {
+
     _bpm = eValue;
+
     if (_active) {
       _stop();
       _start();
     }
+
   };
 
   Controller.prototype.setTreshold = function(eIndex, eValue) {
