@@ -20,6 +20,11 @@
     { label: '128', value: 128 }
   ];
 
+  var PRESET_KEYS = {
+    49: 1, 50: 2, 51: 3, 52: 4, 53: 5, 54: 6, 55: 7, 56: 8, 57: 9,
+    33: 10, 34: 11, 167: 12, 36: 13, 37: 14, 38: 15, 47: 16, 40: 17, 41: 18
+  };
+
   // modules
 
   var _controller, _interface, _presets;
@@ -283,9 +288,12 @@
 
       var preset, sceneId;
 
-      if ($event.which >= 49 && $event.which <= 57) {
-        sceneId = $event.which - 48;
+      if (Object.keys(PRESET_KEYS).indexOf("" + $event.which) > -1) {
+
+        sceneId = PRESET_KEYS[$event.which];
+
         preset =_presets.getPreset(sceneId);
+
         if (preset) {
           console.log('LOAD PRESET', sceneId);
           _controller.loadScene(preset);
@@ -293,8 +301,9 @@
             _interface.sendScene(sceneId);
           }
         } else {
-          console.log('PRESET DOES NOT EXIST', $event.which - 48);
+          console.log('PRESET DOES NOT EXIST', sceneId);
         }
+
       } else if ($event.which === 48) {
         console.log('RESET');
         _controller.resetScene();
